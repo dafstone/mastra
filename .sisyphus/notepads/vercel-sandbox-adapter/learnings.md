@@ -1321,3 +1321,20 @@ The shared conformance test block is correctly executing - 6 tests from the shar
 ### Verification Results
 - `pnpm run build` in `docs` directory: SUCCESS
 - Build confirmed that `PropertiesTable` renders correctly without manual import.
+
+## [2026-02-23T00:00:00Z] Task 12: Docs Sidebar Entry ✅
+
+### Changes Made
+- File: `docs/src/content/en/reference/sidebars.js`
+- Line 678: Inserted `{ type: 'doc', id: 'workspace/vercel-sandbox', label: 'VercelSandbox' },`
+- Position: Between E2BSandbox (line 677) and WorkspaceFilesystem (lines 679-683)
+
+### Verification
+- grep shows entry at line 678 ✅
+- Context check confirms correct position ✅
+- Indentation matches (8 spaces) ✅
+- Trailing comma present ✅
+
+### Status
+- Task 12 complete ✅
+- Next: Task 13 (full build & type-check verification)

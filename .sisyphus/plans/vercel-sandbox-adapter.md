@@ -1236,7 +1236,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `test(vercel): add TDD unit tests and shared test suite integration`
   - Files: `workspaces/vercel/src/sandbox/index.test.ts`
 
-- [ ] 11. Reference Documentation Page
+- [x] 11. Reference Documentation Page
 
   **What to do**:
   - Create `docs/src/content/en/reference/workspace/vercel-sandbox.mdx` following the E2B reference page template
@@ -1350,7 +1350,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `docs(vercel): add VercelSandbox reference page`
   - Files: `docs/src/content/en/reference/workspace/vercel-sandbox.mdx`
 
-- [ ] 12. Docs Sidebar Entry
+- [x] 12. Docs Sidebar Entry
 
   **What to do**:
   - Edit `docs/src/content/en/reference/sidebars.js`

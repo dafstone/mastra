@@ -1,0 +1,18 @@
+QA Scenario 1: Function signature verification
+
+Command: grep -c 'walkFilesystem' workspaces/vercel/src/sandbox/mount-sync.ts
+Result: 2
+
+✅ PASS: walkFilesystem() function exists (2 occurrences: export declaration + JSDoc)
+
+---
+
+Function signature found:
+export async function walkFilesystem(filesystem: WorkspaceFilesystem, basePath: string): Promise<VercelFile[]>
+
+Parameters:
+- filesystem: WorkspaceFilesystem (from @mastra/core/workspace/filesystem)
+- basePath: string (e.g., '/workspace')
+
+Returns: Promise<VercelFile[]> where VercelFile = { path: string, content: Buffer }
+

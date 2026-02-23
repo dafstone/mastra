@@ -515,7 +515,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `feat(vercel): scaffold @mastra/vercel package with types and streaming utils`
   - Files: `workspaces/vercel/src/sandbox/types.ts`
 
-- [ ] 4. Mount File-Sync Utilities
+ [x] 4. Mount File-Sync Utilities
 
   **What to do**:
   - Create `workspaces/vercel/src/sandbox/mount-sync.ts`
@@ -612,7 +612,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `feat(vercel): implement VercelSandbox adapter with mount support`
   - Files: `workspaces/vercel/src/sandbox/mount-sync.ts`
 
-- [ ] 5. Core VercelSandbox Class
+ [x] 5. Core VercelSandbox Class
 
   **What to do**:
   - Create `workspaces/vercel/src/sandbox/index.ts`
@@ -756,7 +756,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `feat(vercel): implement VercelSandbox adapter with mount support`
   - Files: `workspaces/vercel/src/sandbox/index.ts`
 
-- [ ] 6. Provider Descriptor
+ [x] 6. Provider Descriptor
 
   **What to do**:
   - Create `workspaces/vercel/src/provider.ts` exporting `vercelSandboxProvider`
@@ -840,7 +840,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `feat(vercel): implement VercelSandbox adapter with mount support`
   - Files: `workspaces/vercel/src/provider.ts`
 
-- [ ] 7. Barrel Exports
+ [x] 7. Barrel Exports
 
   **What to do**:
   - Create `workspaces/vercel/src/index.ts` as the public API barrel file
@@ -1048,7 +1048,7 @@ Max Concurrent: 4 (Wave 2)
   - Message: `test(vercel): add TDD unit tests and shared test suite integration`
   - Files: `workspaces/vercel/src/sandbox/index.test.ts`
 
-- [ ] 9. TDD Unit Tests — executeCommand, Mounts & Vercel-Specific
+- [x] 9. TDD Unit Tests — executeCommand, Mounts & Vercel-Specific
 
   **What to do**:
   - Add to `workspaces/vercel/src/sandbox/index.test.ts` (same file as Task 8)

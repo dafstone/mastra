@@ -1,0 +1,7 @@
+Scenario 2: No wildcard exports
+
+(grep -c 'export \*' workspaces/vercel/src/index.ts || echo '0'):
+0
+
+Result: ✅ 0 wildcard exports found
+Expected: 0

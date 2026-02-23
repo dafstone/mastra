@@ -1,0 +1,21 @@
+Scenario 1: All expected exports present
+
+grep 'VercelSandbox' workspaces/vercel/src/index.ts:
+export { VercelSandbox } from './sandbox';
+export type { VercelSandboxOptions } from './sandbox/types';
+✅ Match found
+
+grep 'vercelSandboxProvider' workspaces/vercel/src/index.ts:
+export { vercelSandboxProvider } from './provider';
+✅ Match found
+
+grep 'createStreamingBridge' workspaces/vercel/src/index.ts:
+export { createStreamingBridge, type StreamingCallbacks, type StreamingBridge } from './sandbox/streaming';
+✅ Match found
+
+grep 'walkFilesystem' workspaces/vercel/src/index.ts:
+  walkFilesystem,
+✅ Match found
+
+Expected: 4 matches (all key exports present)
+Result: ✅ 4/4 matches found

@@ -24,12 +24,14 @@ import {
 } from '@mastra/core/workspace';
 import type { Sandbox, Snapshot } from '@vercel/sandbox';
 import { Sandbox as VercelSandboxClass } from '@vercel/sandbox';
+import { randomUUID } from 'crypto';
 
 import { createStreamingBridge } from './streaming';
 import type { StreamingCallbacks } from './streaming';
 import { walkFilesystem } from './mount-sync';
 import type { VercelFile } from './mount-sync';
-import { VercelSandboxOptions, VERCEL_STATUS_MAP, LOG_PREFIX } from './types';
+import type { VercelSandboxOptions } from './types';
+import { VERCEL_STATUS_MAP, LOG_PREFIX } from './types';
 
 /** Allowlist pattern for mount paths — absolute path with safe characters only. */
 const SAFE_MOUNT_PATH = /^\/[a-zA-Z0-9_.\-/]+$/;
@@ -78,12 +80,12 @@ export class VercelSandbox extends MastraSandbox {
 
   declare readonly mounts: MountManager; // Non-optional (initialized by MastraSandbox)
 
-  constructor(options: VercelSandboxOptions) {
-    super({ name: 'VercelSandbox', ...options });
-    this.id = options.id ?? crypto.randomUUID();
-    this.sandboxOptions = options;
-    this.env = options.env ?? {};
-    this.timeout = options.timeout ?? 300_000; // 5 minutes default
+  constructor(options?: VercelSandboxOptions) {
+    super({ name: 'VercelSandbox', ...(options || {}) });
+    this.id = options?.id ?? randomUUID();
+    this.sandboxOptions = options || {};
+    this.env = options?.env ?? {};
+    this.timeout = options?.timeout ?? 300_000; // 5 minutes default
   }
 
   // ---------------------------------------------------------------------------
@@ -223,13 +225,14 @@ export class VercelSandbox extends MastraSandbox {
 
     try {
       // Execute command via Vercel SDK
+      const mergedEnv: Record<string, string> = {};
+      if (this.env) Object.assign(mergedEnv, this.env);
+      if (options?.env) Object.assign(mergedEnv, options.env);
+      
       const result = await sandbox.runCommand({
         cmd: fullCommand,
         cwd: options?.cwd,
-        env: {
-          ...this.env,
-          ...options?.env,
-        },
+        env: mergedEnv,
         stdout: bridge.stdout,
         stderr: bridge.stderr,
       });
@@ -263,7 +266,7 @@ export class VercelSandbox extends MastraSandbox {
           command: fullCommand,
           executionTimeMs,
         });
-        throw new SandboxTimeoutError(executionTimeMs, 'execute');
+        throw new SandboxTimeoutError(executionTimeMs, 'command');
       }
 
       // General execution error
@@ -312,7 +315,6 @@ export class VercelSandbox extends MastraSandbox {
       return {
         success: true,
         mountPath,
-        filesWritten: files.length,
       };
     } catch (error) {
       this.logger.error(`${LOG_PREFIX} Failed to mount filesystem`, {
@@ -341,15 +343,19 @@ export class VercelSandbox extends MastraSandbox {
   }
 
   getInfo(): SandboxInfo {
-    const createdAt = new Date().toISOString();
-
     return {
       id: this.id,
+      name: this.name,
       provider: 'vercel' as const,
       status: this.status,
+      createdAt: new Date(),
+      mounts: Array.from(this.mounts.entries).map(([path]) => ({
+        path,
+        filesystem: 'vercel-writefiles',
+      })),
       metadata: {
         timeout: this.timeout,
-        createdAt,
+        createdAt: new Date().toISOString(),
         instance: this.instance ? 'initialized' : 'not_initialized',
       },
     };
@@ -412,7 +418,7 @@ Example usage:
 
       this.logger.info(`${LOG_PREFIX} Snapshot created successfully`, {
         id: this.id,
-        snapshotId: snapshot.id,
+        snapshotId: (snapshot as any).id,
       });
 
       return snapshot;

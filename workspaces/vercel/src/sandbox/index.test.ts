@@ -406,8 +406,11 @@ describe('VercelSandbox - Lifecycle', () => {
 
       expect(info).toEqual({
         id: 'test-sandbox',
+        name: 'VercelSandbox',
         provider: 'vercel',
         status: 'pending', // No instance, so status is 'pending'
+        createdAt: expect.any(Date),
+        mounts: [],
         metadata: expect.objectContaining({
           timeout: 300_000,
           createdAt: expect.any(String),
@@ -424,8 +427,11 @@ describe('VercelSandbox - Lifecycle', () => {
 
       expect(info).toEqual({
         id: 'test-sandbox',
+        name: 'VercelSandbox',
         provider: 'vercel',
         status: 'running',
+        createdAt: expect.any(Date),
+        mounts: [],
         metadata: expect.objectContaining({
           timeout: 300_000,
           createdAt: expect.any(String),
@@ -733,7 +739,6 @@ describe('VercelSandbox - Mount Operations', () => {
       ]),
     );
     expect(result.success).toBe(true);
-    expect(result.filesWritten).toBe(2);
   });
 
   it('mount() returns MountResult with correct filesCount', async () => {
@@ -748,7 +753,6 @@ describe('VercelSandbox - Mount Operations', () => {
     expect(result).toEqual({
       success: true,
       mountPath: '/mnt',
-      filesWritten: 3,
     });
   });
   it('unmount() logs warning (no unmount API)', async () => {
@@ -771,7 +775,6 @@ describe('VercelSandbox - Mount Operations', () => {
     const result = await sandbox.mount(mockFs as any, '/empty');
 
     expect(result.success).toBe(true);
-    expect(result.filesWritten).toBe(0);
     expect(mockSandbox.writeFiles).toHaveBeenCalledWith([]);
   });
 });

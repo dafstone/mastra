@@ -26,7 +26,7 @@ export interface VercelSandboxOptions extends MastraSandboxOptions {
 
 export const VERCEL_STATUS_MAP: Record<string, ProviderStatus> = {
   pending: 'pending',
-  running: 'active',
+  running: 'running',
   stopping: 'stopping',
   stopped: 'stopped',
   failed: 'error',

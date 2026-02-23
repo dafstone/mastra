@@ -64,7 +64,7 @@ export async function walkFilesystem(filesystem: WorkspaceFilesystem, basePath: 
           // Read file content
           try {
             const content = await filesystem.readFile(fullPath);
-            const buffer = content instanceof Buffer ? content : Buffer.from(content, 'utf-8');
+            const buffer = content instanceof Buffer ? content : Buffer.from(content as string, 'utf-8');
 
             // Build Vercel-compatible path (basePath + relative path)
             const vercelPath = basePath === '/' ? fullPath : `${basePath}${fullPath}`;

@@ -1265,3 +1265,59 @@ The shared conformance test block is correctly executing - 6 tests from the shar
 - [x] beforeAll/afterAll used (not beforeEach/afterEach)
 - [x] lsp_diagnostics clean
 - [x] Shared test suite executing and detecting real issues
+
+## 2026-02-23 Task 11: Reference Documentation Page
+
+### File Created
+- Path: docs/src/content/en/reference/workspace/vercel-sandbox.mdx
+- Lines: 370
+- Structure: Followed E2B template exactly
+
+### Sections Included
+1. Frontmatter
+2. Installation
+3. Usage
+4. Constructor parameters
+5. Properties
+6. Methods
+7. Vercel-Specific Methods
+8. Authentication
+9. File Sync Mounting
+10. Related
+
+### PropertiesTable Usage
+- Constructor parameters: 9 properties (id, token, teamId, projectId, timeout, env, memory, cpus, workingDirectory)
+- Properties: 5 properties (id, name, provider, status, supportsMounting)
+- executeCommand options: 7 parameters (command, args, options.timeout, options.cwd, options.env, options.onStdout, options.onStderr)
+
+### Vercel-Specific Content
+- Snapshot behavior: Documented auto-stop after snapshot
+- Domain format: https://<subdomain>.vercel.run
+- Authentication: OIDC vs explicit token explained
+- File sync: writeFiles() approach documented, FUSE explicitly excluded
+
+### Code Examples
+- Basic usage: Included
+- OIDC auth: Included
+- Explicit token auth: Included
+- File sync mounting: Included
+
+### Verification Results
+- Frontmatter: Correct (title, description, packages)
+- Section count: 10 (required: >= 7)
+- PropertiesTable count: 3 (required: >= 3)
+- MDX syntax: Valid structure
+
+## 2026-02-23 Task 11 Fix: Corrected MDX Import
+
+### Issue
+- The `vercel-sandbox.mdx` file included an explicit import for `PropertiesTable`.
+- This caused a build error because `PropertiesTable` is a globally available component in the Mastra documentation MDX system and should not be imported manually.
+
+### Fix
+- Removed the import statement: `import { PropertiesTable } from '@/components/properties-table';`
+- Used `sed` to ensure clean removal of lines 8 and 9.
+
+### Verification Results
+- `pnpm run build` in `docs` directory: SUCCESS
+- Build confirmed that `PropertiesTable` renders correctly without manual import.

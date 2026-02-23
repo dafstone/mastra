@@ -1,0 +1,20 @@
+QA Scenario 1: Streaming Bridge Converts Chunks to Callback Calls
+=====================================================================
+
+Test Command:
+npx tsx -e "
+import { createStreamingBridge } from './workspaces/vercel/src/sandbox/streaming';
+const chunks: string[] = [];
+const bridge = createStreamingBridge({ onStdout: (d) => chunks.push(d) });
+bridge.stdout!.write('hello');
+bridge.stdout!.write(Buffer.from(' world'));
+setTimeout(() => { console.log(JSON.stringify(chunks)); }, 50);
+"
+
+Expected Output: ["hello"," world"]
+Actual Output:   ["hello"," world"]
+
+Status: ✅ PASS
+- String chunk converted to callback
+- Buffer chunk converted to string and passed to callback
+- Chunks received in correct order

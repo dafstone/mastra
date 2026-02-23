@@ -1,0 +1,2 @@
+  external: ['@mastra/core', '@vercel/sandbox'],
+  external: ['@mastra/core', '@vercel/sandbox'],

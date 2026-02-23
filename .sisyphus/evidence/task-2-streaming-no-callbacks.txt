@@ -1,0 +1,17 @@
+QA Scenario 2: Bridge Returns Empty Object When No Callbacks Provided
+======================================================================
+
+Test Command:
+npx tsx -e "
+import { createStreamingBridge } from './workspaces/vercel/src/sandbox/streaming';
+const bridge = createStreamingBridge({});
+console.log(JSON.stringify({ hasStdout: !!bridge.stdout, hasStderr: !!bridge.stderr }));
+"
+
+Expected Output: {"hasStdout":false,"hasStderr":false}
+Actual Output:   {"hasStdout":false,"hasStderr":false}
+
+Status: ✅ PASS
+- No stdout stream created when onStdout callback not provided
+- No stderr stream created when onStderr callback not provided
+- Bridge object properly constructed as empty record

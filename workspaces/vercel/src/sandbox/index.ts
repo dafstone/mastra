@@ -126,7 +126,7 @@ export class VercelSandbox extends MastraSandbox {
       try {
         this.logger.info(`${LOG_PREFIX} Reconnecting to existing sandbox`, { id: this.sandboxOptions.id });
         this.instance = await VercelSandboxClass.get({ sandboxId: this.sandboxOptions.id });
-        this.status = VERCEL_STATUS_MAP[this.instance.status] ?? 'active';
+        // Status will be set by base class _start() wrapper
         this.logger.info(`${LOG_PREFIX} Sandbox reconnected successfully`, { id: this.id, status: this.status });
         return;
       } catch (error) {
@@ -156,10 +156,10 @@ export class VercelSandbox extends MastraSandbox {
         },
       });
 
-      this.status = 'active'; // Vercel "running" → Mastra "active"
+      // Status set to 'running' by base class _start() wrapper
       this.logger.info(`${LOG_PREFIX} Sandbox started successfully`, { id: this.id });
     } catch (error) {
-      this.status = 'error';
+      // Status set to 'error' by base class _start() wrapper
       this.logger.error(`${LOG_PREFIX} Failed to start sandbox`, { error });
       throw error;
     }
@@ -173,7 +173,7 @@ export class VercelSandbox extends MastraSandbox {
     try {
       this.logger.info(`${LOG_PREFIX} Stopping sandbox`, { id: this.id });
       await this.instance.stop();
-      this.status = 'stopped';
+      // Status set by base class _stop() wrapper
       this.instance = null;
       this.logger.info(`${LOG_PREFIX} Sandbox stopped successfully`, { id: this.id });
     } catch (error) {
@@ -346,7 +346,7 @@ export class VercelSandbox extends MastraSandbox {
     return {
       id: this.id,
       provider: 'vercel' as const,
-      status: VERCEL_STATUS_MAP[this.instance?.status ?? 'pending'] ?? 'stopped',
+      status: this.status,
       metadata: {
         timeout: this.timeout,
         createdAt,

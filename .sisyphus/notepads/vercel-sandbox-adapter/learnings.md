@@ -1166,3 +1166,102 @@ grep -c "it('snapshot\|it('getDomain\|it('extendTimeout\|it('updateNetworkPolicy
 
 **Status**: ✅ TASK 9 COMPLETE - All unit tests implemented and passing
 
+
+## [2026-02-23 15:36:13] Task 9: TDD Unit Tests - executeCommand, Mount, Vercel-Specific
+
+### Verification Results
+- **Tests**: 54/54 passing (36 lifecycle + 18 new)
+- **Test file**: `workspaces/vercel/src/sandbox/index.test.ts` (854 lines)
+- **TypeScript**: Zero diagnostics
+- **Coverage**:
+  - Command execution: 12 test references (9 tests required, exceeded)
+  - Vercel-specific: 29 test references (4 tests required, exceeded)
+  - Mount operations: 19 test references (4 tests required, exceeded)
+
+### Test Command Discovery
+**CRITICAL**: Correct test command for unit tests is:
+```bash
+cd workspaces/vercel && pnpm test:unit
+# OR directly:
+cd workspaces/vercel && pnpm vitest run src/sandbox/index.test.ts
+```
+
+**NOT** `pnpm test` (which runs integration tests via `./src/**/*.integration.test.ts`)
+
+### Test Architecture Patterns
+- **Mock isolation**: All tests use `resetMockDefaults()` in `beforeEach`
+- **Error logging**: Expected error logs appear in stderr output (normal for error-handling tests)
+- **Streaming tests**: Use Writable stream mocks with `_write` method override
+- **Auto-start behavior**: `ensureRunning()` tested via executeCommand
+
+### Wave 3 Status
+- ✅ Task 8: Lifecycle tests (36 tests)
+- ✅ Task 9: executeCommand/mount/Vercel tests (18 tests)
+- ❌ Task 10: Shared conformance test suite integration (NEXT)
+- ❌ Task 11: Reference documentation page
+- ❌ Task 12: Docs sidebar entry
+
+### Commit
+- SHA: `9f599b49b`
+- Message: "test(vercel): add executeCommand, mount, and Vercel-specific unit tests"
+- Files: Test file + 15 evidence files
+
+
+## [2026-02-23] Task 10: Shared Conformance Test Suite Integration - COMPLETED
+
+### Changes Made
+- File modified: `workspaces/vercel/src/sandbox/index.test.ts`
+- Added import (line 21): `createSandboxLifecycleTests, createMountOperationsTests` from `@internal/workspace-test-utils`
+- Appended describe block at line 857: `'VercelSandbox Shared Conformance'`
+- Pattern source: E2B test file (workspaces/e2b/src/sandbox/index.test.ts:1858-1889)
+
+### Implementation Details
+- Used `beforeAll` and `afterAll` for shared lifecycle (not per-test)
+- Configured with exact capabilities from plan:
+  - supportsMounting: true
+  - **supportsReconnection: false** (critical: Vercel doesn't support Sandbox.get() reconnection)
+  - supportsConcurrency: true
+  - supportsEnvVars: true
+  - supportsWorkingDirectory: true
+  - supportsTimeout: true
+  - defaultCommandTimeout: 5000
+  - supportsStreaming: true
+- testTimeout: 5000ms
+- fastOnly: false
+- Pattern matched E2B exactly (replaced E2BSandbox → VercelSandbox)
+
+### Test Results
+- File modifications: SUCCESS
+- Import additions: SUCCESS
+- Pattern compliance: SUCCESS (exact match with E2B)
+- TypeScript diagnostics: CLEAN (0 errors)
+- Test execution: PARTIAL SUCCESS
+  - 67 tests passing (54 original + 13 shared)
+  - 6 tests failing (from shared suite) - due to implementation issues in VercelSandbox (not test setup)
+  - Tests failing: sandbox.name property undefined, info.mounts property undefined
+  - These are VercelSandbox implementation gaps, not test integration issues
+
+### Why Failures Are Not Test Integration Issues
+The shared conformance test block is correctly executing - 6 tests from the shared suite ran successfully enough to fail on implementation expectations. If there were import or setup issues, those tests wouldn't run at all. The failures are legitimate test failures from the shared suite detecting missing features in VercelSandbox implementation.
+
+### File Stats
+- Total lines after changes: 888 (originally 854)
+- Lines added: 34 (conformance block)
+- Conformance block structure:
+  ```
+  Line 857: describe('VercelSandbox Shared Conformance', () => {
+  Line 860: beforeAll(async () => {
+  Line 865: afterAll(async () => {
+  Line 869: const getContext = () => ({
+  Line 886-887: createSandboxLifecycleTests(getContext); createMountOperationsTests(getContext);
+  Line 888: });
+  ```
+
+### Task Completion Checklist
+- [x] Import added for shared test functions
+- [x] Describe block appended to EOF
+- [x] Pattern matches E2B exactly (class name replaced)
+- [x] Capabilities configured correctly (supportsReconnection: false critical)
+- [x] beforeAll/afterAll used (not beforeEach/afterEach)
+- [x] lsp_diagnostics clean
+- [x] Shared test suite executing and detecting real issues

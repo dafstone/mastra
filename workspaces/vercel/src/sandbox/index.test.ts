@@ -13,11 +13,12 @@
  * Based on E2B test architecture with adaptations for Vercel SDK.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import type { Sandbox } from '@vercel/sandbox';
 
 import { VercelSandbox } from './index';
 import type { VercelSandboxOptions } from './types';
+import { createSandboxLifecycleTests, createMountOperationsTests } from '@internal/workspace-test-utils';
 
 // Use vi.hoisted to define mocks before vi.mock is hoisted
 const { mockSandbox, createMockSandboxApi, resetMockDefaults } = vi.hoisted(() => {
@@ -852,3 +853,36 @@ describe('VercelSandbox - Vercel-Specific Features', () => {
 });
 
 
+
+describe('VercelSandbox Shared Conformance', () => {
+  let sandbox: VercelSandbox;
+
+  beforeAll(async () => {
+    sandbox = new VercelSandbox({ id: `conformance-${Date.now()}` });
+    await sandbox._start();
+  });
+
+  afterAll(async () => {
+    if (sandbox?.destroy) await sandbox._destroy();
+  });
+
+  const getContext = () => ({
+    sandbox: sandbox as any,
+    capabilities: {
+      supportsMounting: true,
+      supportsReconnection: false,
+      supportsConcurrency: true,
+      supportsEnvVars: true,
+      supportsWorkingDirectory: true,
+      supportsTimeout: true,
+      defaultCommandTimeout: 5000,
+      supportsStreaming: true,
+    },
+    testTimeout: 5000,
+    fastOnly: false,
+    createSandbox: () => new VercelSandbox(),
+  });
+
+  createSandboxLifecycleTests(getContext);
+  createMountOperationsTests(getContext);
+});
